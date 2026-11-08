@@ -1,8 +1,11 @@
 /* ==========================================
-   LIVING EFFECTS: Pustaka Ceria International (Enhanced)
+   LIVING EFFECTS: Pustaka Ceria International
+   v3.0 — Minimalist Cinematic Edition (rapikan & sinkron dengan JS v3)
    ========================================== */
 
-/* 1. Smooth Preloader Transition */
+/* ------------------------------------------
+   1. PRELOADER
+------------------------------------------ */
 #kd-preloader {
     transition: opacity 0.6s ease-out, visibility 0.6s;
 }
@@ -12,53 +15,75 @@
     pointer-events: none;
 }
 
-/* 2. Glassmorphism Premium (Enhanced Glow) */
+/* ------------------------------------------
+   2. GLASSMORPHISM PREMIUM
+------------------------------------------ */
 .glass-panel {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.12);
 }
 [data-theme="dark"] .glass-panel {
     background: rgba(15, 23, 42, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
 .glass-chip {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     color: #fff;
+    font-weight: 600;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
-/* 3. Text Gradient Animasi Halus */
+/* ------------------------------------------
+   3. TEXT GRADIENT ANIMASI
+------------------------------------------ */
 .text-gradient {
-    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #fbbf24 100%);
-    background-size: 200% auto;
+    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 30%, #fbbf24 70%, #f87171 100%);
+    background-size: 300% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: gradientShift 5s ease infinite;
+    animation: gradientShift 6s ease infinite;
+    font-weight: 900;
+    filter: drop-shadow(0 0 18px rgba(167, 139, 250, 0.35));
 }
 @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
 
-/* 4. Optimasi Kartu 3D Tilt */
+/* ------------------------------------------
+   4. KARTU 3D TILT + CARD SPOTLIGHT (sync JS v3.6)
+------------------------------------------ */
 .kd-tilt-card {
+    position: relative;
     transform-style: preserve-3d;
     will-change: transform;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
-.kd-tilt-card .kd-pop-cover, 
+.kd-tilt-card .kd-pop-cover,
 .kd-tilt-card .card-image {
     transform: translateZ(25px);
 }
+.kd-tilt-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%),
+                rgba(96, 165, 250, 0.16), rgba(167, 139, 250, 0.08) 45%, transparent 70%);
+}
+.kd-tilt-card:hover::after { opacity: 1; }
 
-/* 5. Hover Effect Halus untuk Hasil Pencarian */
+/* Hover halus hasil pencarian */
 .kd-item, .grid-item .card {
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
 }
@@ -67,10 +92,9 @@
     box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.2);
 }
 
-/* ==========================================
-   PROFESSIONAL HERO SECTION UPGRADE (Perfect Layering)
-   ========================================== */
-
+/* ------------------------------------------
+   5. HERO BASE + SLIDER FALLBACK
+------------------------------------------ */
 .kd-hero-pro {
     position: relative;
     min-height: 650px;
@@ -80,190 +104,327 @@
     color: #fff;
 }
 
-/* ==========================================
-   PROFESSIONAL HERO SECTION UPGRADE (Premium Edition)
-   ========================================== */
-
-.kd-hero-pro {
-    position: relative;
-    min-height: 650px;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    color: #fff;
-    transition: background-image 0.8s ease-in-out;
-}
-
-/* Layer 1: Animated Background Slider */
 .hero-bg-slider {
-    position: absolute;
-    top: 0; left: 0;
+    position: absolute; top: 0; left: 0;
     width: 100%; height: 100%;
     z-index: 0;
 }
-
 .hero-slide {
-    position: absolute;
-    top: 0; left: 0;
+    position: absolute; top: 0; left: 0;
     width: 100%; height: 100%;
     background-size: cover;
     background-position: center;
     opacity: 0;
     animation: heroSlide 15s infinite ease-in-out;
 }
-
-.slide-1 { 
-    background: linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.65) 100%), 
-                url('../images/slide1.jpg');
-    background-size: cover;
-    background-position: center;
-    animation-delay: 0s; 
+.slide-1 {
+    background: linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.65) 100%), url('../images/slide1.jpg');
+    background-size: cover; background-position: center;
+    animation-delay: 0s;
 }
-.slide-2 { 
-    background: linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.65) 100%), 
-                url('../images/slide2.jpg');
-    background-size: cover;
-    background-position: center;
-    animation-delay: 5s; 
+.slide-2 {
+    background: linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.65) 100%), url('../images/slide2.jpg');
+    background-size: cover; background-position: center;
+    animation-delay: 5s;
 }
-.slide-3 { 
-    background: linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.65) 100%), 
-                url('../images/slide3.jpg');
-    background-size: cover;
-    background-position: center;
-    animation-delay: 10s; 
+.slide-3 {
+    background: linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.65) 100%), url('../images/slide3.jpg');
+    background-size: cover; background-position: center;
+    animation-delay: 10s;
 }
-
 .hero-bg-slider::after {
     content: '';
-    position: absolute;
-    top: 0; left: 0;
+    position: absolute; top: 0; left: 0;
     width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(3px);
 }
-
 @keyframes heroSlide {
-    0% { opacity: 0; transform: scale(1.08); }
-    10% { opacity: 1; transform: scale(1); }
-    33% { opacity: 1; transform: scale(1); }
-    43% { opacity: 0; transform: scale(1.08); }
+    0%   { opacity: 0; transform: scale(1.08); }
+    10%  { opacity: 1; transform: scale(1); }
+    33%  { opacity: 1; transform: scale(1); }
+    43%  { opacity: 0; transform: scale(1.08); }
     100% { opacity: 0; transform: scale(1.08); }
 }
 
-/* Layer 2: Floating Professional Icons - MORE VISIBLE */
-.hero-floating-icons {
+/* ------------------------------------------
+   6. HERO LAYERING (sync JS v3.2)
+------------------------------------------ */
+/* Layer 0: crossfade + Ken Burns, gambar gelap & subtle */
+.kd-hero-layer {
+    position: absolute; inset: 0; z-index: 0;
+    background-size: cover; background-position: center;
+    opacity: 0; transform: scale(1.1);
+    filter: brightness(0.55) saturate(0.85) contrast(1.05);
+    transition: opacity 1.8s ease-in-out, transform 10s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+}
+.kd-hero-layer.is-active { opacity: 1; transform: scale(1); }
+
+/* Layer 1: overlay gelap + vignette */
+.kd-hero-overlay {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background:
+        linear-gradient(180deg, rgba(2,6,23,.62) 0%, rgba(2,6,23,.38) 45%, rgba(2,6,23,.82) 100%),
+        radial-gradient(120% 90% at 50% 15%, rgba(2,6,23,0) 35%, rgba(2,6,23,.60) 100%);
+}
+
+/* Layer 1b: AURORA ambient glow (efek baru) */
+.kd-aurora {
+    position: absolute; inset: -20%; z-index: 1;
+    pointer-events: none;
+    filter: blur(55px);
+    opacity: 0.5;
+}
+.kd-aurora span {
     position: absolute;
-    top: 0; left: 0;
+    width: 45vmax; height: 45vmax;
+    border-radius: 50%;
+    animation: kdAurora 26s ease-in-out infinite alternate;
+}
+.kd-aurora span:nth-child(1) {
+    top: -10%; left: -5%;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.30), transparent 60%);
+}
+.kd-aurora span:nth-child(2) {
+    top: 20%; right: -10%;
+    background: radial-gradient(circle, rgba(167, 139, 250, 0.26), transparent 60%);
+    animation-delay: -8s; animation-duration: 32s;
+}
+.kd-aurora span:nth-child(3) {
+    bottom: -15%; left: 30%;
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.16), transparent 60%);
+    animation-delay: -16s; animation-duration: 38s;
+}
+@keyframes kdAurora {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(6vmax, -4vmax, 0) scale(1.15); }
+    100% { transform: translate3d(-5vmax, 4vmax, 0) scale(0.95); }
+}
+
+/* Layer 2: ikon mengambang */
+.hero-floating-icons {
+    position: absolute; top: 0; left: 0;
     width: 100%; height: 100%;
-    z-index: 1;
+    z-index: 2;
     pointer-events: none;
     overflow: hidden;
 }
-
 .float-icon-1, .float-icon-2, .float-icon-3, .float-icon-4, .float-icon-5 {
     position: absolute;
-    color: rgba(255, 255, 255, 0.12); /* Lebih terang dari 0.05 */
+    color: rgba(255, 255, 255, 0.12);
     animation: floatIcon 25s infinite linear;
-    filter: drop-shadow(0 0 20px rgba(255,255,255,0.3)); /* Glow effect */
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+    transition: translate 0.4s ease-out;
 }
-
-.float-icon-1 { font-size: 9rem; top: 10%; left: 5%; animation-duration: 30s; }
-.float-icon-2 { font-size: 7rem; top: 65%; left: 85%; animation-duration: 35s; animation-delay: -5s; }
+.float-icon-1 { font-size: 9rem;  top: 10%; left: 5%;  animation-duration: 30s; }
+.float-icon-2 { font-size: 7rem;  top: 65%; left: 85%; animation-duration: 35s; animation-delay: -5s; }
 .float-icon-3 { font-size: 11rem; top: 75%; left: 10%; animation-duration: 40s; animation-delay: -10s; }
-.float-icon-4 { font-size: 8rem; top: 15%; left: 80%; animation-duration: 32s; animation-delay: -15s; }
-.float-icon-5 { font-size: 6rem; top: 40%; left: 50%; animation-duration: 28s; animation-delay: -8s; }
-
+.float-icon-4 { font-size: 8rem;  top: 15%; left: 80%; animation-duration: 32s; animation-delay: -15s; }
+.float-icon-5 { font-size: 6rem;  top: 40%; left: 50%; animation-duration: 28s; animation-delay: -8s; }
 @keyframes floatIcon {
-    0% { transform: translateY(0) rotate(0deg); opacity: 0.08; }
-    50% { transform: translateY(-50px) rotate(10deg); opacity: 0.15; }
+    0%   { transform: translateY(0) rotate(0deg); opacity: 0.08; }
+    50%  { transform: translateY(-50px) rotate(10deg); opacity: 0.15; }
     100% { transform: translateY(0) rotate(0deg); opacity: 0.08; }
 }
 
-/* Layer 3: Particles Canvas */
+/* Layer 3: canvas partikel minimalis */
 #tsparticles-hero {
-    position: absolute;
-    top: 0; left: 0;
+    position: absolute; top: 0; left: 0;
     width: 100%; height: 100%;
-    z-index: 2;
+    z-index: 3;
     pointer-events: auto;
 }
 
-/* Layer 4: Content */
+/* Layer 4: cursor spotlight */
+.kd-hero-spotlight {
+    position: absolute; inset: 0; z-index: 4;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    mix-blend-mode: screen;
+}
+
+/* Layer 10: konten */
 .kd-hero-pro .kd-container {
     position: relative;
     z-index: 10;
+    will-change: transform, opacity;
 }
 
-/* Typography Upgrades - BOLDER & BRIGHTER */
+/* ------------------------------------------
+   7. TIPOGRAFI HERO — jelas & tegas
+------------------------------------------ */
 .hero-main-title {
-    font-size: 4.2rem; /* Lebih besar */
-    font-weight: 900; /* Extra bold */
+    font-size: 4.2rem;
+    font-weight: 900;
     line-height: 1.05;
     margin-bottom: 1.2rem;
     color: #ffffff;
-    text-shadow: 0 8px 60px rgba(0,0,0,0.7), 0 0 40px rgba(255,255,255,0.1); /* Shadow lebih dramatis */
-    letter-spacing: -0.02em; /* Sedikit lebih rapat untuk kesan premium */
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 6px rgba(0,0,0,.55), 0 8px 40px rgba(0,0,0,.75);
 }
-
 .hero-subtitle {
-    font-size: 1.4rem; /* Lebih besar */
-    color: rgba(255, 255, 255, 0.95); /* Lebih terang */
+    font-size: 1.4rem;
+    color: rgba(255, 255, 255, 0.97);
     max-width: 800px;
     margin-bottom: 3.5rem;
     font-weight: 500;
     line-height: 1.7;
-    text-shadow: 0 4px 30px rgba(0,0,0,0.6);
+    letter-spacing: 0.01em;
+    text-shadow: 0 2px 10px rgba(0,0,0,.85), 0 6px 30px rgba(0,0,0,.60);
 }
-
 .kd-hero-pro .kd-quote {
-    color: rgba(255, 255, 255, 0.85); /* Lebih terang */
+    color: rgba(255, 255, 255, 0.90);
     font-style: italic;
     font-size: 1.15rem;
     margin-top: 1.5rem;
-    font-weight: 400;
+    text-shadow: 0 2px 8px rgba(0,0,0,.80);
 }
 
-/* Enhanced Glassmorphism */
-.glass-panel {
-    background: rgba(255, 255, 255, 0.12); /* Lebih solid */
-    backdrop-filter: blur(24px); /* Blur lebih kuat */
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.25); /* Border lebih terang */
-    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+/* ------------------------------------------
+   8. TYPEWRITER CARET (sync JS v3.3)
+------------------------------------------ */
+.kd-type-caret {
+    display: inline-block;
+    width: 3px; height: .9em;
+    margin-left: .12em;
+    background: #fbbf24;
+    vertical-align: -0.08em;
+    box-shadow: 0 0 12px rgba(251, 191, 36, 0.8);
+    animation: kdBlink 1s steps(2) infinite;
 }
+@keyframes kdBlink { 50% { opacity: 0; } }
 
-.glass-chip {
-    background: rgba(255, 255, 255, 0.15); /* Lebih solid */
+/* ------------------------------------------
+   9. TICKER MARQUEE (sync JS v3.4)
+------------------------------------------ */
+.kd-hero-ticker {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    z-index: 9;
+    overflow: hidden;
+    background: rgba(2, 6, 23, 0.55);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #fff;
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.kd-ticker-track {
+    display: flex;
+    width: max-content;
+    padding: 0.65rem 0;
+    animation: kdTicker 32s linear infinite;
+}
+.kd-hero-ticker:hover .kd-ticker-track { animation-play-state: paused; }
+.kd-ticker-item {
+    display: flex; align-items: center; gap: .5rem;
+    margin-right: 2.5rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: .82rem;
     font-weight: 600;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    letter-spacing: .10em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+.kd-ticker-item i { color: #fbbf24; font-size: .7rem; }
+@keyframes kdTicker { to { transform: translateX(-50%); } }
+
+/* ------------------------------------------
+   10. SCROLL SYSTEM (sync JS v3.8)
+------------------------------------------ */
+/* Progress bar gradient di puncak halaman */
+.kd-scroll-progress {
+    position: fixed; top: 0; left: 0;
+    height: 3px; width: 0;
+    z-index: 9999;
+    pointer-events: none;
+    background: linear-gradient(90deg, #60a5fa, #a78bfa, #fbbf24);
+    box-shadow: 0 0 10px rgba(96, 165, 250, 0.6);
 }
 
-/* Text Gradient - Lebih Mencolok */
-.text-gradient {
-    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 30%, #fbbf24 70%, #f87171 100%); /* Lebih banyak warna */
-    background-size: 300% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: gradientShift 6s ease infinite;
-    font-weight: 900;
-    text-shadow: 0 0 40px rgba(167,139,250,0.4); /* Glow effect */
+/* Navbar menjadi solid saat scroll */
+.c-header {
+    transition: box-shadow 0.35s ease, background 0.35s ease;
+}
+.c-header.is-scrolled {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    background: rgba(2, 6, 23, 0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
 }
 
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+/* Tombol kembali ke atas */
+.kd-back-top {
+    position: fixed; right: 22px; bottom: 22px;
+    z-index: 999;
+    width: 46px; height: 46px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(15, 23, 42, 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    opacity: 0; visibility: hidden;
+    transform: translateY(14px);
+    transition: all 0.35s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+.kd-back-top.show {
+    opacity: 1; visibility: visible;
+    transform: none;
+}
+.kd-back-top:hover {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    border-color: transparent;
+    transform: translateY(-3px);
 }
 
-/* Responsive Adjustments */
+/* ------------------------------------------
+   11. SCROLL REVEAL + UNDERLINE DRAW (sync JS v3.7)
+------------------------------------------ */
+.kd-reveal {
+    opacity: 0;
+    transform: translateY(28px) scale(.98);
+    transition: opacity .7s ease, transform .7s cubic-bezier(.22, 1, .36, 1);
+}
+.kd-reveal.kd-in {
+    opacity: 1;
+    transform: none;
+}
+.kd-reveal .kd-underline {
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform .9s cubic-bezier(.22, 1, .36, 1) .2s;
+}
+.kd-reveal.kd-in .kd-underline {
+    transform: scaleX(1);
+}
+
+/* ------------------------------------------
+   12. RESPONSIVE
+------------------------------------------ */
 @media (max-width: 768px) {
     .kd-hero-pro { min-height: 550px; }
     .hero-main-title { font-size: 2.6rem; }
     .hero-subtitle { font-size: 1.1rem; margin-bottom: 2rem; }
     .float-icon-1, .float-icon-3 { display: none; }
+    .kd-ticker-item { font-size: .72rem; margin-right: 1.6rem; }
+    .kd-aurora { filter: blur(40px); opacity: 0.35; }
+    .kd-back-top { right: 14px; bottom: 14px; width: 42px; height: 42px; }
+}
+
+/* ------------------------------------------
+   13. REDUCED MOTION
+------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+    .kd-hero-layer, .kd-ticker-track, .kd-type-caret, .text-gradient,
+    .hero-slide, .kd-aurora span,
+    .float-icon-1, .float-icon-2, .float-icon-3, .float-icon-4, .float-icon-5 {
+        animation: none !important;
+        transition: none !important;
+    }
+    .kd-reveal { opacity: 1 !important; transform: none !important; }
+    .kd-reveal .kd-underline { transform: scaleX(1) !important; }
+    .kd-scroll-progress { display: none; }
 }
