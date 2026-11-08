@@ -81,6 +81,7 @@ $request_uri = urlencode(strip_tags(urldecode($_SERVER['REQUEST_URI'])));
         <meta property="twitter:image"
               content="//<?php echo $_SERVER["SERVER_NAME"] . SWB . $sysconf['template']['dir']; ?>/default/img/logo.png"/>
     <?php endif; ?>
+    
     <!-- // load bootstrap style -->
     <link rel="stylesheet" href="<?php echo assets('css/bootstrap.min.css'); ?>">
     <!-- // font awesome -->
@@ -103,6 +104,13 @@ $request_uri = urlencode(strip_tags(urldecode($_SERVER['REQUEST_URI'])));
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo assets('css/kd.css?v=' . date('Ymd-his')); ?>">
+    
+    <!-- // Pustaka Ceria Living Effects (Local Assets - CSP Safe) -->
+    <link rel="stylesheet" href="<?php echo assets('css/living-effects.css?v=' . date('Ymd')); ?>">
+    <script src="<?php echo assets('js/vanilla-tilt.min.js'); ?>"></script>
+    <script src="<?php echo assets('js/tsparticles.bundle.min.js'); ?>"></script>
+    <script src="<?php echo assets('js/living-effects.js?v=' . date('Ymd')); ?>" defer></script>
+
     <script>try { var t = localStorage.getItem('kd-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
 
     <?php
@@ -135,5 +143,12 @@ $request_uri = urlencode(strip_tags(urldecode($_SERVER['REQUEST_URI'])));
     endif;
     ?>
 
+    <!-- Preloader untuk transisi halaman yang mulus -->
+    <div id="kd-preloader" class="fixed inset-0 z-[9999] bg-white dark:bg-slate-900 flex items-center justify-center transition-opacity duration-500">
+        <div class="flex flex-col items-center">
+            <i class="fas fa-book-reader text-5xl text-blue-600 animate-bounce mb-4"></i>
+            <span class="text-sm font-semibold text-slate-600 dark:text-slate-300 tracking-widest">MEMUAT PERPUSTAKAAN...</span>
+        </div>
+    </div>
 </head>
 <body class="kd-body">

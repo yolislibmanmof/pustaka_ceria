@@ -1,0 +1,269 @@
+/* ==========================================
+   LIVING EFFECTS: Pustaka Ceria International (Enhanced)
+   ========================================== */
+
+/* 1. Smooth Preloader Transition */
+#kd-preloader {
+    transition: opacity 0.6s ease-out, visibility 0.6s;
+}
+#kd-preloader.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* 2. Glassmorphism Premium (Enhanced Glow) */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+[data-theme="dark"] .glass-panel {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-chip {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+/* 3. Text Gradient Animasi Halus */
+.text-gradient {
+    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #fbbf24 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 5s ease infinite;
+}
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* 4. Optimasi Kartu 3D Tilt */
+.kd-tilt-card {
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.kd-tilt-card .kd-pop-cover, 
+.kd-tilt-card .card-image {
+    transform: translateZ(25px);
+}
+
+/* 5. Hover Effect Halus untuk Hasil Pencarian */
+.kd-item, .grid-item .card {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+.kd-item:hover, .grid-item .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================
+   PROFESSIONAL HERO SECTION UPGRADE (Perfect Layering)
+   ========================================== */
+
+.kd-hero-pro {
+    position: relative;
+    min-height: 650px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    color: #fff;
+}
+
+/* ==========================================
+   PROFESSIONAL HERO SECTION UPGRADE (Premium Edition)
+   ========================================== */
+
+.kd-hero-pro {
+    position: relative;
+    min-height: 650px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    color: #fff;
+    transition: background-image 0.8s ease-in-out;
+}
+
+/* Layer 1: Animated Background Slider */
+.hero-bg-slider {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+}
+
+.hero-slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    animation: heroSlide 15s infinite ease-in-out;
+}
+
+.slide-1 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.65) 100%), 
+                url('../images/slide1.jpg');
+    background-size: cover;
+    background-position: center;
+    animation-delay: 0s; 
+}
+.slide-2 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.65) 100%), 
+                url('../images/slide2.jpg');
+    background-size: cover;
+    background-position: center;
+    animation-delay: 5s; 
+}
+.slide-3 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.65) 100%), 
+                url('../images/slide3.jpg');
+    background-size: cover;
+    background-position: center;
+    animation-delay: 10s; 
+}
+
+.hero-bg-slider::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(3px);
+}
+
+@keyframes heroSlide {
+    0% { opacity: 0; transform: scale(1.08); }
+    10% { opacity: 1; transform: scale(1); }
+    33% { opacity: 1; transform: scale(1); }
+    43% { opacity: 0; transform: scale(1.08); }
+    100% { opacity: 0; transform: scale(1.08); }
+}
+
+/* Layer 2: Floating Professional Icons - MORE VISIBLE */
+.hero-floating-icons {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.float-icon-1, .float-icon-2, .float-icon-3, .float-icon-4, .float-icon-5 {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.12); /* Lebih terang dari 0.05 */
+    animation: floatIcon 25s infinite linear;
+    filter: drop-shadow(0 0 20px rgba(255,255,255,0.3)); /* Glow effect */
+}
+
+.float-icon-1 { font-size: 9rem; top: 10%; left: 5%; animation-duration: 30s; }
+.float-icon-2 { font-size: 7rem; top: 65%; left: 85%; animation-duration: 35s; animation-delay: -5s; }
+.float-icon-3 { font-size: 11rem; top: 75%; left: 10%; animation-duration: 40s; animation-delay: -10s; }
+.float-icon-4 { font-size: 8rem; top: 15%; left: 80%; animation-duration: 32s; animation-delay: -15s; }
+.float-icon-5 { font-size: 6rem; top: 40%; left: 50%; animation-duration: 28s; animation-delay: -8s; }
+
+@keyframes floatIcon {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0.08; }
+    50% { transform: translateY(-50px) rotate(10deg); opacity: 0.15; }
+    100% { transform: translateY(0) rotate(0deg); opacity: 0.08; }
+}
+
+/* Layer 3: Particles Canvas */
+#tsparticles-hero {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 2;
+    pointer-events: auto;
+}
+
+/* Layer 4: Content */
+.kd-hero-pro .kd-container {
+    position: relative;
+    z-index: 10;
+}
+
+/* Typography Upgrades - BOLDER & BRIGHTER */
+.hero-main-title {
+    font-size: 4.2rem; /* Lebih besar */
+    font-weight: 900; /* Extra bold */
+    line-height: 1.05;
+    margin-bottom: 1.2rem;
+    color: #ffffff;
+    text-shadow: 0 8px 60px rgba(0,0,0,0.7), 0 0 40px rgba(255,255,255,0.1); /* Shadow lebih dramatis */
+    letter-spacing: -0.02em; /* Sedikit lebih rapat untuk kesan premium */
+}
+
+.hero-subtitle {
+    font-size: 1.4rem; /* Lebih besar */
+    color: rgba(255, 255, 255, 0.95); /* Lebih terang */
+    max-width: 800px;
+    margin-bottom: 3.5rem;
+    font-weight: 500;
+    line-height: 1.7;
+    text-shadow: 0 4px 30px rgba(0,0,0,0.6);
+}
+
+.kd-hero-pro .kd-quote {
+    color: rgba(255, 255, 255, 0.85); /* Lebih terang */
+    font-style: italic;
+    font-size: 1.15rem;
+    margin-top: 1.5rem;
+    font-weight: 400;
+}
+
+/* Enhanced Glassmorphism */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.12); /* Lebih solid */
+    backdrop-filter: blur(24px); /* Blur lebih kuat */
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.25); /* Border lebih terang */
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.glass-chip {
+    background: rgba(255, 255, 255, 0.15); /* Lebih solid */
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* Text Gradient - Lebih Mencolok */
+.text-gradient {
+    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 30%, #fbbf24 70%, #f87171 100%); /* Lebih banyak warna */
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 6s ease infinite;
+    font-weight: 900;
+    text-shadow: 0 0 40px rgba(167,139,250,0.4); /* Glow effect */
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .kd-hero-pro { min-height: 550px; }
+    .hero-main-title { font-size: 2.6rem; }
+    .hero-subtitle { font-size: 1.1rem; margin-bottom: 2rem; }
+    .float-icon-1, .float-icon-3 { display: none; }
+}

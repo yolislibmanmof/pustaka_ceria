@@ -157,7 +157,7 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
     else:
 
         $output .= '<div class="col-md-3 px-2 grid-item">';
-        $output .= '<div class="card p-0 mb-3">';
+        $output .= '<div class="card p-0 mb-3 kd-tilt-card" data-tilt data-tilt-max="4" data-tilt-speed="300" data-tilt-glare data-tilt-max-glare="0.1" data-tilt-scale="1.01" data-tilt-perspective="1000">';
         $__ = '__';
         $title_cite = str_replace('{title}', substr($title, 0, 50) , __('Citation for: {title}'));
         $output .= <<<HTML

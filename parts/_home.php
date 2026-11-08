@@ -9,7 +9,7 @@
  */
 
 /**
- * Home page - Pustaka Ceria theme
+ * Home page - Pustaka Ceria theme (Premium International Edition)
  */
 
 // ---------------------------------------------------------------------------
@@ -86,6 +86,7 @@ $kd_pq = $dbs->query("SELECT b.biblio_id, b.title, b.call_number, b.publish_year
 if ($kd_pq) {
   while ($r = $kd_pq->fetch_assoc()) $kd_pop[] = $r;
 }
+
 $kd_card = function ($b, $mod = 4) {
     $bid = (int)$b['biblio_id'];
     $btitle = trim(strip_tags($b['title']));
@@ -93,7 +94,7 @@ $kd_card = function ($b, $mod = 4) {
     $detail = 'index.php?p=show_detail&id=' . $bid;
     $bookmarked = in_array($bid, $_SESSION['bookmark'] ?? []);
     ob_start(); ?>
-                <article class="kd-pop-item" id="pop-<?= $bid ?>">
+                    <article class="kd-pop-item kd-tilt-card" id="pop-<?= $bid ?>" data-tilt data-tilt-max="6" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.15" data-tilt-scale="1.02" data-tilt-perspective="1000">
                     <a class="kd-pop-cover kd-pg<?= $bid % $mod ?><?= $img_ok ? ' has-img' : '' ?>" href="<?= $detail ?>"<?= $img_ok ? ' style="background-image:url(\'./lib/minigalnano/createthumb.php?filename=' . urlencode('images/docs/' . $b['image']) . '&width=240\')"' : '' ?>>
                         <?php if (!$img_ok): ?>
                             <span class="cv-top"><b><?= htmlspecialchars($b['call_number'] ?: '') ?></b><i class="fas fa-bookmark"></i></span>
@@ -132,30 +133,68 @@ $kd_nq = $dbs->query("SELECT b.biblio_id, b.title, b.call_number, b.publish_year
 if ($kd_nq) {
   while ($r = $kd_nq->fetch_assoc()) $kd_new[] = $r;
 }
+
+// ===========================================================================
+// PREPARE SLIDER IMAGES - Check if images exist and prepare URLs
+// ===========================================================================
+$slider_images = [];
+$slider_dir = __DIR__ . '/../assets/images/';
+
+for ($i = 1; $i <= 3; $i++) {
+    $img_file = $slider_dir . 'slide' . $i . '.jpg';
+    if (file_exists($img_file)) {
+        $slider_images[] = CURRENT_TEMPLATE_DIR . 'assets/images/slide' . $i . '.jpg';
+    }
+}
+$has_slider_images = !empty($slider_images);
 ?>
 
 <header class="c-header"><?php include '_navbar.php'; ?></header>
 
-<section class="kd-hero">
-    <i class="kd-deco dots"></i>
-    <i class="kd-deco fas fa-star star1"></i>
-    <i class="kd-deco fas fa-star star2"></i>
-    <i class="kd-deco dot"></i>
-    <i class="kd-deco ring"></i>
-    <i class="kd-deco fas fa-book-open book"></i>
-    <i class="kd-deco fas fa-pencil-alt pencil"></i>
-    <div class="kd-container">
-        <span class="kd-chip"><i class="fas fa-star"></i> <?= __('Public School Library Catalog'); ?></span>
-        <h1><?= __("Let's explore the world"); ?> <span><?= __('through reading!'); ?></span></h1>
-        <p class="kd-sub"><?= __('One-stop search for school library collections'); ?></p>
+<!-- HERO SECTION: Premium International Edition -->
+<section class="kd-hero-pro relative overflow-hidden" 
+         <?php if ($has_slider_images): ?>style="background-image: url('<?php echo $slider_images[0]; ?>'); background-size: cover; background-position: center; transition: background-image 0.8s ease-in-out;"<?php endif; ?>
+         data-slides='<?php echo htmlspecialchars(json_encode($slider_images), ENT_QUOTES); ?>'>
+    
+    <!-- Professional Animated Background Slider (Fallback) -->
+    <div class="hero-bg-slider" style="display: <?php echo $has_slider_images ? 'none' : 'block'; ?>;">
+        <div class="hero-slide slide-1"></div>
+        <div class="hero-slide slide-2"></div>
+        <div class="hero-slide slide-3"></div>
+    </div>
+    
+    <!-- Professional Floating Icons -->
+    <div class="hero-floating-icons">
+        <i class="fas fa-globe-americas float-icon-1"></i>
+        <i class="fas fa-university float-icon-2"></i>
+        <i class="fas fa-book-reader float-icon-3"></i>
+        <i class="fas fa-graduation-cap float-icon-4"></i>
+        <i class="fas fa-atom float-icon-5"></i>
+    </div>
 
-        <div class="kd-search-card">
+    <!-- Particles Overlay (Interactive Network Effect) -->
+    <div id="tsparticles-hero" class="absolute inset-0 z-2 pointer-events-auto"></div>
+    
+    <!-- Main Content -->
+    <div class="kd-container relative z-10">
+        <span class="kd-chip glass-chip">
+            <i class="fas fa-globe"></i> <?= __('Universal Library & Knowledge Center'); ?>
+        </span>
+        <h1 class="hero-main-title">
+            <?= __("Explore the World of"); ?> <span class="text-gradient"><?= __('Knowledge'); ?></span>
+        </h1>
+        <p class="kd-sub hero-subtitle">
+            <?= __('Your premier gateway to comprehensive collections for universities, institutions, and communities.'); ?>
+        </p>
+
+        <!-- Glassmorphism Search Card -->
+        <div class="kd-search-card glass-panel">
             <?php $kd_home = true; include '_search-form.php'; $kd_home = false; ?>
         </div>
 
         <div class="kd-quote">
             <i class="fas fa-quote-left"></i>
-            <span><?= __('Reading is a window to the world. Every book opens a new adventure.'); ?></span>
+            <span><?= __('Empowering minds, inspiring futures through accessible information.'); ?></span>
         </div>
     </div>
 </section>
@@ -165,7 +204,7 @@ if ($kd_nq) {
         <section class="kd-section">
             <h2><?= __('Explore Collection Categories'); ?></h2>
             <span class="kd-underline"></span>
-            <p class="kd-desc"><?= __('Choose the type of collection, source, or school library you want to explore.'); ?></p>
+            <p class="kd-desc"><?= __('Choose the type of collection, source, or institution you want to explore.'); ?></p>
             <div class="kd-cats">
                 <?php foreach ($kd_groups as $g): ?>
                     <div class="kd-cat" style="--c: <?= $g['color'] ?>; --cs: <?= $g['soft'] ?>">
@@ -233,7 +272,7 @@ if ($kd_nq) {
             <span class="kd-pop-chip"><i class="fas fa-star"></i> <?= __('Librarian Recommendations') ?></span>
             <div class="kd-pop-head">
                 <div>
-                    <h2><?= __('Popular Collections & Student Textbooks') ?></h2>
+                    <h2><?= __('Popular Collections & Academic References') ?></h2>
                     <p><?= __('Books most often borrowed and used as main study references in our library.') ?></p>
                 </div>
                 <a class="kd-ddc-all" href="index.php?keywords=&amp;search=search"><?= __('View All Collections') ?> <i class="fas fa-arrow-right"></i></a>

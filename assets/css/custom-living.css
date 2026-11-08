@@ -1,0 +1,65 @@
+/* Animasi Putar Lambat untuk Dekorasi */
+@keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+    animation: spin-slow 12s linear infinite;
+}
+
+/* Glassmorphism Fallback untuk Browser Lama */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Skeleton Loading Animation */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+}
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* 1. Glassmorphism Panel (Efek Kaca Buram Premium) */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+}
+.dark .glass-panel {
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 2. Glass Chip (Untuk badge di Hero) */
+.glass-chip {
+    background: rgba(59, 130, 246, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* 3. Text Gradient (Untuk teks "through reading!") */
+.text-gradient {
+    background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* 4. Optimasi Kartu 3D Tilt agar tidak glitch */
+.kd-tilt-card {
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+.kd-tilt-card .kd-pop-cover {
+    transform: translateZ(20px); /* Efek cover buku sedikit menonjol */
+}
