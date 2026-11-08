@@ -263,6 +263,18 @@
        ============================================================ */
     'Frequently Asked Questions & Guides' => 'Pertanyaan Umum & Panduan',
 
+       /* ============================================================
+       ACCESSIBILITY & CITATION PAGES
+       ============================================================ */
+    'Skip to content' => 'Langsung ke konten',
+    'Back to record' => 'Kembali ke rekaman',
+    'Where do you want to share?' => 'Mau bagikan ke mana?',
+    'Choose how you want to share' => 'Pilih cara membagikan',
+    'APA Style' => 'Gaya APA',
+    'MLA Style' => 'Gaya MLA',
+    'Chicago Style' => 'Gaya Chicago',
+    'Turabian Style' => 'Gaya Turabian',
+
     /* ============================================================
        KREDIT / GUARD ATRIBUSI (tetap dipanggil oleh _credit.php)
        ============================================================ */

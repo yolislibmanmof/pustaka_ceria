@@ -112,6 +112,8 @@ include LIB . "contents/chat.php"; ?>
 <?php include "_modal_topic.php"; ?>
 <?php include "_modal_advanced.php"; ?>
 <?php include "_modal_social_media.php"; ?>
+<?php include '_kd_cmdk.php'; ?>
+<?php include '_kd_recent.php'; ?>
 
 <!-- // Load highlight -->
 <script src="<?= JWB; ?>highlight.js"></script>
@@ -137,5 +139,6 @@ include LIB . "contents/chat.php"; ?>
         })
     </script>
 <?php endif; ?>
+</main>
 </body>
 </html>

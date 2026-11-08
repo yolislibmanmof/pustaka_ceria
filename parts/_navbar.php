@@ -60,7 +60,7 @@ $kd_is_search = isset($_GET['search']);
             </span>
         </a>
 
-        <button class="kd-icon-btn kd-burger" type="button" aria-label="Menu" onclick="document.getElementById('kd-nav').classList.toggle('open')">
+ <button class="kd-icon-btn kd-burger" type="button" aria-label="<?= __('Menu'); ?>" aria-controls="kd-nav" aria-expanded="false" onclick="var n=document.getElementById('kd-nav'); n.classList.toggle('open'); this.setAttribute('aria-expanded', n.classList.contains('open'));">
             <i class="fas fa-bars"></i>
         </button>
 

@@ -31,7 +31,7 @@
 $request_uri = urlencode(strip_tags(urldecode($_SERVER['REQUEST_URI'])));
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo str_replace('_', '-', $sysconf['default_lang'] ?? 'id'); ?>">
 <head>
     <meta charset="utf-8">
     <title><?php echo $page_title; ?></title>
@@ -81,7 +81,9 @@ $request_uri = urlencode(strip_tags(urldecode($_SERVER['REQUEST_URI'])));
         <meta property="twitter:image"
               content="//<?php echo $_SERVER["SERVER_NAME"] . SWB . $sysconf['template']['dir']; ?>/default/img/logo.png"/>
     <?php endif; ?>
-    
+
+    <!-- Anti-FOUC: terapkan tema sebelum CSS dimuat -->
+    <script>try { var t = localStorage.getItem('kd-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
     <!-- // load bootstrap style -->
     <link rel="stylesheet" href="<?php echo assets('css/bootstrap.min.css'); ?>">
     <!-- // font awesome -->
@@ -107,11 +109,11 @@ $request_uri = urlencode(strip_tags(urldecode($_SERVER['REQUEST_URI'])));
     
     <!-- // Pustaka Ceria Living Effects (Local Assets - CSP Safe) -->
     <link rel="stylesheet" href="<?php echo assets('css/living-effects.css?v=' . date('Ymd')); ?>">
-    <script src="<?php echo assets('js/vanilla-tilt.min.js'); ?>"></script>
-    <script src="<?php echo assets('js/tsparticles.bundle.min.js'); ?>"></script>
+    <script src="<?php echo assets('js/vanilla-tilt.min.js'); ?>" defer></script>
+    <script src="<?php echo assets('js/tsparticles.bundle.min.js'); ?>" defer></script>
     <script src="<?php echo assets('js/living-effects.js?v=' . date('Ymd')); ?>" defer></script>
 
-    <script>try { var t = localStorage.getItem('kd-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
+
 
     <?php
     $icon = SWB . 'webicon.ico';
@@ -143,12 +145,28 @@ $request_uri = urlencode(strip_tags(urldecode($_SERVER['REQUEST_URI'])));
     endif;
     ?>
 
-    <!-- Preloader untuk transisi halaman yang mulus -->
-    <div id="kd-preloader" class="fixed inset-0 z-[9999] bg-white dark:bg-slate-900 flex items-center justify-center transition-opacity duration-500">
-        <div class="flex flex-col items-center">
-            <i class="fas fa-book-reader text-5xl text-blue-600 animate-bounce mb-4"></i>
-            <span class="text-sm font-semibold text-slate-600 dark:text-slate-300 tracking-widest">MEMUAT PERPUSTAKAAN...</span>
+    <!-- PRELOADER v2: dengan Logo Library -->
+    <div id="kd-preloader" role="status" aria-live="polite" aria-label="Loading">
+        <div class="kd-preloader-inner">
+            <div class="kd-preloader-logo">
+                <?php
+                if (isset($sysconf['logo_image']) && !empty($sysconf['logo_image']) && $imagesDisk->isExists($path = 'default/' . $sysconf['logo_image'])) {
+                    echo '<img src="' . SWB . 'lib/minigalnano/createthumb.php?filename=images/' . $path . '&width=120" alt="' . htmlspecialchars($sysconf['library_name']) . '" class="kd-preloader-img">';
+                } else {
+                    echo '<i class="fas fa-book-reader kd-preloader-fallback"></i>';
+                }
+                ?>
+                <div class="kd-preloader-ring" aria-hidden="true"></div>
+            </div>
+            <strong class="kd-preloader-name"><?= htmlspecialchars($sysconf['library_name']); ?></strong>
+            <div class="kd-preloader-bar" aria-hidden="true">
+                <span class="kd-preloader-fill"></span>
+            </div>
+            <span class="kd-preloader-sr">Memuat katalog perpustakaan...</span>
         </div>
     </div>
 </head>
 <body class="kd-body">
+<!-- ACCESSIBILITY: Skip link untuk keyboard & screen reader users -->
+<a href="#main-content" class="kd-skip-link"><?= __('Skip to content'); ?></a>
+<main id="main-content" tabindex="-1">

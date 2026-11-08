@@ -837,3 +837,132 @@ header.c-header { position: sticky !important; top: 0; z-index: 1000; }
     .kd-footer-v2 .kd-container.kd-footer-grid { grid-template-columns: 1fr; gap: 26px; }
     .kd-footer-v2 .kd-footer-bottom-in { justify-content: center; text-align: center; }
 }
+
+/* ==========================================
+ACCESSIBILITY & PRELOADER V2
+========================================== */
+/* Skip link (tersembunyi kecuali di-focus via keyboard) */
+.kd-skip-link {
+    position: absolute;
+    left: -9999px; top: auto;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    z-index: 10000;
+    background: var(--kd-blue, #2563eb);
+    color: #fff !important;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+}
+.kd-skip-link:focus {
+    position: fixed;
+    left: 16px; top: 16px;
+    width: auto; height: auto;
+    box-shadow: 0 6px 18px rgba(37,99,235,.4);
+}
+
+/* Focus ring konsisten untuk semua interaksi keyboard */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2.5px solid var(--kd-blue, #2563eb);
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+.kd-tab-btn:focus-visible,
+.kd-act-btn:focus-visible,
+.kd-action-btn:focus-visible {
+    outline-offset: 3px;
+}
+
+/* Main content anchor target */
+#main-content { outline: none; }
+
+/* ---------- PRELOADER v2 dengan logo ---------- */
+#kd-preloader {
+    position: fixed; inset: 0;
+    z-index: 9999;
+    background: var(--kd-surface, #fff);
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity .6s ease-out, visibility .6s;
+}
+[data-theme="dark"] #kd-preloader { background: #0f172a; }
+#kd-preloader.fade-out {
+    opacity: 0; visibility: hidden; pointer-events: none;
+}
+.kd-preloader-inner {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 14px;
+}
+.kd-preloader-logo {
+    position: relative;
+    width: 120px; height: 120px;
+    display: inline-flex; align-items: center; justify-content: center;
+}
+.kd-preloader-img {
+    width: 84px; height: 84px;
+    object-fit: contain;
+    position: relative; z-index: 2;
+    animation: kdPrePulse 2s ease-in-out infinite;
+}
+.kd-preloader-fallback {
+    font-size: 42px;
+    color: var(--kd-blue, #2563eb);
+    position: relative; z-index: 2;
+    animation: kdPrePulse 2s ease-in-out infinite;
+}
+.kd-preloader-ring {
+    position: absolute; inset: 0;
+    border: 3px solid transparent;
+    border-top-color: var(--kd-blue, #2563eb);
+    border-right-color: #7c3aed;
+    border-radius: 50%;
+    animation: kdPreSpin 1.1s linear infinite;
+}
+@keyframes kdPreSpin { to { transform: rotate(360deg); } }
+@keyframes kdPrePulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.06); opacity: .85; }
+}
+.kd-preloader-name {
+    font-size: 15px; font-weight: 800;
+    color: var(--kd-text, #0f172a);
+    letter-spacing: .02em;
+    text-align: center;
+    max-width: 260px;
+}
+.kd-preloader-bar {
+    width: 200px; height: 4px;
+    background: rgba(148,163,184,.25);
+    border-radius: 999px;
+    overflow: hidden;
+}
+.kd-preloader-fill {
+    display: block;
+    width: 40%; height: 100%;
+    background: linear-gradient(90deg, #2563eb, #7c3aed, #fbbf24);
+    border-radius: 999px;
+    animation: kdPreFill 1.6s ease-in-out infinite;
+}
+@keyframes kdPreFill {
+    0% { transform: translateX(-120%); }
+    100% { transform: translateX(350%); }
+}
+.kd-preloader-sr {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0);
+    white-space: nowrap; border: 0;
+}
+
+/* Reduced motion: matikan animasi preloader */
+@media (prefers-reduced-motion: reduce) {
+    .kd-preloader-ring, .kd-preloader-img, .kd-preloader-fallback, .kd-preloader-fill {
+        animation: none !important;
+    }
+}

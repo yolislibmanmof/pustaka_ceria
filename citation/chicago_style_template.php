@@ -1,42 +1,59 @@
 <?php
 /**
- * Template by          : Tutorial SLiMS
- * Template description : Integrated library catalog search theme for SLiMS 9.8.0 (ID/EN)
- * Email                : tutorialslims@gmail.com
- * Instagram            : https://instagram.com/tutorial_slims (@tutorial_slims)
- * Copyright            : (c) Tutorial SLiMS. Licensed under GPLv3.
- * Template ini merupakan ide dari Hendro Wicaksono | Email : hendro.wicaksono@gmail.com
+ * Chicago Style citation — Pustaka Ceria wrapper (v2 - Bugfix)
  */
-
-/**
- * APA Style citation
- * Copyright (C) 2015  Arie Nugraha (dicarve@gmail.com)
- *
- * Available data to use:
- * $author_list    : Array of authors <-- you must pre-proccess this to string first
- * $authors_string : String of authors name separated by comma if there is more than one
- * $title          : String of title
- * $publish_year   : String of publication year
- * $edition        : String of edition statement
- * $publish_place  : String of place of publication
- * $publisher_name : String of name of publisher
- * $gmd_name       : String of name of GMD/Document format
- *
- */
-
+$author_list = [];
+$authors_string = '';
+foreach ($authors as $order => $data) {
+    $chunk_name = explode(' ', $data['author_name']);
+    $last_chunkname_order = array_key_last($chunk_name);
+    $last_name = $chunk_name[$last_chunkname_order];
+    $first_name = $chunk_name[0] ?? '';
+    if (!str_ends_with(trim($first_name), ',')) {
+        unset($chunk_name[$last_chunkname_order]);
+        if ($order > 0 && count($authors) > 2) continue;
+        $author_list[] = $last_name . ', ' . implode(', ', array_map(fn($name) => ucfirst($name) . '', $chunk_name));
+    } else {
+        if ($order > 0 && count($authors) > 2) continue;
+        unset($chunk_name[0]);
+        $author_list[] = $first_name . ' ' . implode(', ', array_map(fn($name) => ucfirst($name) . '', $chunk_name));
+    }
+}
+$authors_string = implode(', ', $author_list) . (count($authors) > 2 ? ' et al.' : '');
+$citation_text = '';
+if ($authors_string) {
+    $citation_text .= $authors_string . '. ';
+    $citation_text .= '<em>' . $title . '</em>. ';
+    if ($edition) $citation_text .= $edition . '. ';
+    $citation_text .= $publish_place . ': ' . $publisher_name . ', ' . $publish_year . '.';
+} else {
+    $citation_text = '<em>' . $title . '</em>. ';
+    if ($edition) $citation_text .= $edition . '. ';
+    $citation_text .= $publish_place . ': ' . $publisher_name . ', ' . $publish_year . '.';
+}
 ?>
-<p class="citation">
-  <h3><?php echo __('Chicago Style'); ?></h3>
-  <?php if ($authors_string) : ?>
-    <span class="authors"><?php print $authors_string ?>.</span>
-    <span class="title"><em><?php print $title ?></em>.</span>
-    <span class="edition"><?php print $edition ?></span>
-  <?php else : ?>
-    <span class="title"><em><?php print $title ?></em>.</span>
-    <span class="edition"><?php print $edition ?>.</span>
-  <?php endif; ?>
-  <span class="publish_place"><?php print $publish_place ?>:</span>
-  <span class="publisher"><?php print $publisher_name ?>,</span>
-  <span class="year"><?php print $publish_year ?>.</span>
-  <span class="gmd_name"><?php print $gmd_name ?>.</span>
-</p>
+<div class="kd-citation-page">
+    <a href="javascript:history.back()" class="kd-citation-back">
+        <i class="fas fa-arrow-left"></i> <?= __('Back to record'); ?>
+    </a>
+    <h1><?= __('Chicago Style'); ?> <?= __('Citation'); ?></h1>
+    <div class="citation-text" id="citation-text"><?= $citation_text; ?></div>
+    <div class="kd-citation-actions">
+        <button type="button" onclick="copyCitation()" class="kd-citation-actions-btn">
+            <i class="fas fa-copy"></i> <?= __('Copy'); ?>
+        </button>
+        <button type="button" onclick="window.print()" class="kd-citation-actions-btn">
+            <i class="fas fa-print"></i> <?= __('Print'); ?>
+        </button>
+        <a href="javascript:history.back()" class="kd-citation-actions-btn">
+            <i class="fas fa-times"></i> <?= __('Close'); ?>
+        </a>
+    </div>
+</div>
+<script>
+function copyCitation() {
+    var t = document.getElementById('citation-text').innerText;
+    if (navigator.clipboard) { navigator.clipboard.writeText(t); }
+    else { var ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
+}
+</script>
