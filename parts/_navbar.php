@@ -9,27 +9,40 @@
  */
 
 /**
- * Navbar - Pustaka Ceria theme
+ * Navbar - Pustaka Ceria theme (v2 — All Menus Visible + Full Dropdown)
  */
 
-// text menus (as in the design) and icon-only menus
+// semua menu tampil sebagai link di navbar (desktop)
 $main_menus = [
-  'home' => ['text' => __('Home'), 'url' => 'index.php'],
-  'index' => ['text' => __('Index'), 'url' => 'index.php?keywords=&search=search'],
+  'home'      => ['text' => __('Home'),      'url' => 'index.php',                              'icon' => 'fa-home'],
+  'index'     => ['text' => __('Index'),     'url' => 'index.php?keywords=&search=search',      'icon' => 'fa-list'],
+  'libinfo'   => ['text' => __('Information'),'url' => 'index.php?p=libinfo',                   'icon' => 'fa-info-circle'],
+  'news'      => ['text' => __('News'),      'url' => 'index.php?p=news',                       'icon' => 'fa-newspaper'],
+  'help'      => ['text' => __('Help'),      'url' => 'index.php?p=help',                       'icon' => 'fa-question-circle'],
+  'librarian' => ['text' => __('Librarian'), 'url' => 'index.php?p=librarian',                  'icon' => 'fa-users'],
 ];
-$icon_menus = [
-  'libinfo' => ['text' => __('Information'), 'url' => 'index.php?p=libinfo', 'icon' => 'fa-info-circle'],
-  'news' => ['text' => __('News'), 'url' => 'index.php?p=news', 'icon' => 'fa-newspaper'],
-  'help' => ['text' => __('Help'), 'url' => 'index.php?p=help', 'icon' => 'fa-question-circle'],
-  'librarian' => ['text' => __('Librarian'), 'url' => 'index.php?p=librarian', 'icon' => 'fa-users'],
-];
+
+// dropdown "titik tiga" = SEMUA menu + area member
+$drop = $main_menus;
+if ($is_login) {
+  $count_basket = count($_SESSION['m_mark_biblio'] ?? []);
+  $drop['member'] = ['text' => htmlspecialchars($_SESSION['m_name'] ?? __('Member Area')), 'url' => 'index.php?p=member', 'icon' => 'fa-user'];
+  $drop['basket'] = ['text' => __('Basket') . ' <sup id="count-basket" class="kd-badge">' . $count_basket . '</sup>', 'url' => 'index.php?p=member&sec=title_basket', 'icon' => 'fa-shopping-basket'];
+  $drop['logout'] = ['text' => __('Logout'), 'url' => 'index.php?p=member&logout=1', 'icon' => 'fa-sign-out-alt'];
+} else {
+  $drop['member'] = ['text' => __('Member Area'), 'url' => 'index.php?p=member', 'icon' => 'fa-user'];
+}
 
 // active language: ?select_lang= (current request) wins over the cookie, then the system default
 $select_lang = isset($_GET['select_lang']) && is_string($_GET['select_lang'])
   ? trim(strip_tags($_GET['select_lang']))
   : ($_COOKIE['select_lang'] ?? $sysconf['default_lang']);
+
+// deteksi halaman aktif
+$kd_p = $_GET['p'] ?? '';
+$kd_is_search = isset($_GET['search']);
 ?>
-<div class="kd-header">
+<div class="kd-header kd-header-v2">
     <div class="kd-container">
         <a class="kd-brand" href="index.php">
             <?php
@@ -51,57 +64,51 @@ $select_lang = isset($_GET['select_lang']) && is_string($_GET['select_lang'])
             <i class="fas fa-bars"></i>
         </button>
 
-        <nav class="kd-nav" id="kd-nav">
-            <?php
-            $is_search = isset($_GET['search']);
-            foreach ($main_menus as $key => $menu) {
-              if ($key === 'home') $active = !isset($_GET['p']) && !$is_search;
-              else $active = $is_search;
-              echo '<a class="kd-link' . ($active ? ' active' : '') . '" href="' . $menu['url'] . '">' . $menu['text'] . '</a>';
-            }
-
-            $drop = $icon_menus;
-            if ($is_login) {
-              $count_basket = count($_SESSION['m_mark_biblio'] ?? []);
-              $drop['member'] = ['text' => htmlspecialchars($_SESSION['m_name'] ?? __('Member Area')), 'url' => 'index.php?p=member', 'icon' => 'fa-user'];
-              $drop['basket'] = ['text' => __('Basket') . ' <sup id="count-basket" class="kd-badge">' . $count_basket . '</sup>', 'url' => 'index.php?p=member&sec=title_basket', 'icon' => 'fa-shopping-basket'];
-              $drop['logout'] = ['text' => __('Logout'), 'url' => 'index.php?p=member&logout=1', 'icon' => 'fa-sign-out-alt'];
-            } else {
-              $drop['member'] = ['text' => __('Member Area'), 'url' => 'index.php?p=member', 'icon' => 'fa-user'];
-            }
+        <nav class="kd-nav kd-nav-v2" id="kd-nav">
+            <?php foreach ($main_menus as $key => $menu):
+              if ($key === 'home')          $active = ($kd_p === '' && !$kd_is_search);
+              elseif ($key === 'index')     $active = $kd_is_search;
+              else                          $active = ($kd_p === $key);
             ?>
+              <a class="kd-link<?= $active ? ' active' : '' ?>" href="<?= $menu['url'] ?>">
+                  <i class="fas <?= $menu['icon'] ?>"></i> <?= $menu['text'] ?>
+              </a>
+            <?php endforeach; ?>
+
             <div class="kd-more" id="kd-more">
-                <button type="button" class="kd-icon-btn" id="kd-more-btn" aria-haspopup="true" aria-expanded="false" aria-label="<?= __('Menu') ?>" title="<?= __('Menu') ?>">
+                <button type="button" class="kd-icon-btn" id="kd-more-btn" aria-haspopup="true" aria-expanded="false" aria-label="<?= __('Menu') ?>" title="<?= __('All Menus') ?>">
                     <i class="fas fa-ellipsis-h"></i>
                 </button>
-                <div class="kd-more-menu" id="kd-more-menu">
+                <div class="kd-more-menu kd-more-menu-v2" id="kd-more-menu">
+                    <span class="kd-more-title"><?= __('All Menus') ?></span>
                     <?php foreach ($drop as $key => $menu): ?>
-                        <a href="<?= $menu['url'] ?>" class="<?= (($_GET['p'] ?? '') === $key) ? 'on' : '' ?>">
+                        <a href="<?= $menu['url'] ?>" class="<?= ($kd_p === $key) ? 'on' : '' ?>">
                             <i class="fas <?= $menu['icon'] ?>"></i> <span><?= $menu['text'] ?></span>
                         </a>
                     <?php endforeach; ?>
                 </div>
             </div>
-            <?php ?>
 
             <?php
             // only Indonesian (ID) and English (EN) are shown, as in the design
             $kd_langs = array_filter($available_languages ?? [], fn($l) => in_array(strtolower(substr($l[0], 0, 2)), ['id', 'en']));
             usort($kd_langs, fn($a, $b) => strcmp($a[0], $b[0]));
+            $kd_flags = ['ID' => 'fi-id', 'EN' => 'fi-us'];
             ?>
             <?php if (count($kd_langs) > 0): ?>
-                <span class="kd-lang">
+                <span class="kd-lang kd-lang-v2">
                 <?php foreach ($kd_langs as $lang_index):
                   $code = strtoupper(substr($lang_index[0], 0, 2));
-                  // stay on the current page, only switch the language
                   $lang_url = 'index.php?' . http_build_query(array_merge(array_filter($_GET, fn($v, $k) => $k !== 'select_lang' && is_string($v), ARRAY_FILTER_USE_BOTH), ['select_lang' => $lang_index[0]])); ?>
                     <a href="<?= htmlspecialchars($lang_url) ?>" title="<?= $lang_index[1] ?>"
-                       class="<?= $lang_index[0] == $select_lang ? 'on' : '' ?>"><?= $code ?></a>
+                       class="<?= $lang_index[0] == $select_lang ? 'on' : '' ?>">
+                        <span class="fi <?= $kd_flags[$code] ?? '' ?>"></span> <?= $code ?>
+                    </a>
                 <?php endforeach; ?>
                 </span>
             <?php endif; ?>
 
-            <button type="button" class="kd-icon-btn" id="kd-theme-toggle" aria-label="<?= __('Toggle theme') ?>">
+            <button type="button" class="kd-icon-btn kd-theme-btn" id="kd-theme-toggle" aria-label="<?= __('Toggle theme') ?>">
                 <i class="fas fa-moon"></i>
             </button>
         </nav>
@@ -118,6 +125,9 @@ $select_lang = isset($_GET['select_lang']) && is_string($_GET['select_lang'])
             });
             document.addEventListener('click', function (e) {
                 if (!more.contains(e.target)) { more.classList.remove('open'); moreBtn.setAttribute('aria-expanded', false); }
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') { more.classList.remove('open'); moreBtn.setAttribute('aria-expanded', false); }
             });
         }
         var btn = document.getElementById('kd-theme-toggle');

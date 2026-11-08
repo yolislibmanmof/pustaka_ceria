@@ -9,7 +9,7 @@
  */
 
 /**
- * Search result page - Pustaka Ceria theme
+ * Search result page - Pustaka Ceria theme (v2 — Cinematic Upgrade)
  */
 ?>
 <header class="c-header"><?php include '_navbar.php'; ?></header>
@@ -17,39 +17,41 @@
 
 <div class="kd-container">
     <div class="kd-results">
-        <aside class="kd-side">
-            <h4 style="margin-bottom:4px"><?= __('Filter by') ?></h4>
+        <aside class="kd-side kd-filter-card">
+            <div class="kd-filter-head">
+                <h4><i class="fas fa-filter"></i> <?= __('Filter by') ?></h4>
+            </div>
             <?= $engine->getFilter($opac, true) ?>
         </aside>
 
         <section>
-            <div class="kd-summary">
-                <div>
+            <div class="kd-summary kd-summary-bar">
+                <div class="kd-summary-info">
                     <?php
-                    $keywords_info = '<span class="search-keyword-info" title="' . htmlentities($keywords) . '">' . ((strlen($keywords) > 30) ? substr($keywords, 0, 30) . '...' : $keywords) . '</span>';
+                    $keywords_info = '<span class="search-keyword-info kd-keyword-chip" title="' . htmlentities($keywords) . '">' . ((strlen($keywords) > 30) ? substr($keywords, 0, 30) . '...' : $keywords) . '</span>';
                     $search_result_info = '<div class="search-found-info">';
-                    $search_result_info .= __('Found <strong>{biblio_list->num_rows}</strong> from your keywords') . ': <strong class="search-found-info-keywords">' . $keywords_info . '</strong>';
+                    $search_result_info .= __('Found <strong class="kd-count-badge">{biblio_list->num_rows}</strong> from your keywords') . ': <strong class="search-found-info-keywords">' . $keywords_info . '</strong>';
                     $search_result_info .= '</div>';
                     echo str_replace('{biblio_list->num_rows}', $engine->getNumRows(), $search_result_info);
                     ?>
                 </div>
-                <div class="form-inline">
-                    <label class="mr-2 font-weight-bold" for="search-order"><?= __('Sort by') ?></label>
-                    <select id="search-order"><?= $sort_select ?></select>
+                <div class="form-inline kd-summary-tools">
+                    <label class="mr-2 font-weight-bold kd-sort-label" for="search-order"><?= __('Sort by') ?></label>
+                    <select id="search-order" class="kd-sort-select"><?= $sort_select ?></select>
                     <form class="ml-2" method="POST" action="<?= $_SERVER['PHP_SELF'] . '?' . http_build_query(array_filter($_GET, fn($key) => $key !== 'csrf_token', ARRAY_FILTER_USE_KEY)) ?>">
                         <input type="hidden" name="csrf_token" value="<?= $opac->getCsrf() ?>"/>
                         <?php if (($_SESSION['LIST_VIEW'] ?? 'list') === 'list'): ?>
                             <input type="hidden" name="view" value="grid"/>
-                            <button type="submit" class="btn btn-sm btn-outline-secondary" title="<?= __('Grid view') ?>"><i class="fas fa-th-large"></i></button>
+                            <button type="submit" class="btn btn-sm btn-outline-secondary kd-view-btn" title="<?= __('Grid view') ?>"><i class="fas fa-th-large"></i></button>
                         <?php else: ?>
                             <input type="hidden" name="view" value="list"/>
-                            <button type="submit" class="btn btn-sm btn-outline-secondary" title="<?= __('List view') ?>"><i class="fas fa-list"></i></button>
+                            <button type="submit" class="btn btn-sm btn-outline-secondary kd-view-btn" title="<?= __('List view') ?>"><i class="fas fa-list"></i></button>
                         <?php endif; ?>
                     </form>
                 </div>
             </div>
 
-            <div class="wrapper kd-grid-wrap">
+            <div class="wrapper kd-grid-wrap kd-results-list">
                 <?php
                 if (ENVIRONMENT == 'development' && !empty($engine->getError())) echo '<div class="alert alert-danger mt-2 text-center">' . $engine->getError() . '</div>';
                 if (trim(strip_tags($main_content)) === '') {
@@ -66,15 +68,20 @@
 <?php if (($_SESSION['LIST_VIEW'] ?? 'list') === 'grid'): ?>
     <script>
         $(document).ready(function () {
-            var loaded = 0, total = $(".grid-item .img-thumbnail").length;
-            if (!total) { done(); return; }
-            $(".grid-item .img-thumbnail").each(function (idx, img) {
-                $("<img>").on("load error", function () { if (++loaded == total) done(); }).attr("src", $(img).attr("src"));
-            });
+            var loaded = 0, doneFlag = false;
+            var imgs = $(".grid-item img"); /* FIX: selector diperbarui (kd-grid-img) */
+            var total = imgs.length;
             function done() {
+                if (doneFlag) return;
+                doneFlag = true;
                 $('.biblioResult').addClass('row').masonry({itemSelector: '.grid-item', columnWidth: '.grid-item'});
                 $('.dropdown-toggle').dropdown();
             }
+            if (!total) { done(); return; }
+            imgs.each(function (idx, img) {
+                $("<img>").on("load error", function () { if (++loaded >= total) done(); }).attr("src", $(img).attr("src"));
+            });
+            setTimeout(done, 3500); /* fallback: jangan gantung jika gambar gagal dimuat */
         });
     </script>
 <?php endif; ?>

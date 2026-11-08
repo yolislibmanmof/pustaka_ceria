@@ -11,7 +11,7 @@
 /**
  * @Created by          : Waris Agung Widodo (ido.alit@gmail.com)
  * @Date                : 2020-01-03 08:49
- * @File name           : visitor_template.php
+ * @File name           : visitor_template.php (v2 — Cinematic Upgrade)
  */
 
 $main_template_path = __DIR__ . '/login_template.inc.php';
@@ -19,11 +19,7 @@ $main_template_path = __DIR__ . '/login_template.inc.php';
 // set default language
 if (isset($_GET['select_lang'])) {
     $select_lang = trim(strip_tags($_GET['select_lang']));
-    // delete previous language cookie
     if (isset($_COOKIE['select_lang'])) {
-        #@setcookie('select_lang', $select_lang, time()-14400, SWB);
-        #@setcookie('select_lang', $select_lang, time()-14400, SWB, "", FALSE, TRUE);
-
         @setcookie('select_lang', $select_lang, [
             'expires' => time()-14400,
             'path' => SWB,
@@ -32,14 +28,7 @@ if (isset($_GET['select_lang'])) {
             'httponly' => true,
             'samesite' => 'Lax',
         ]);
-
-
-
     }
-    // create language cookie
-    #@setcookie('select_lang', $select_lang, time()+14400, SWB);
-    #@setcookie('select_lang', $select_lang, time()+14400, SWB, "", FALSE, TRUE);
-
     @setcookie('select_lang', $select_lang, [
         'expires' => time()+14400,
         'path' => SWB,
@@ -48,32 +37,36 @@ if (isset($_GET['select_lang'])) {
         'httponly' => true,
         'samesite' => 'Lax',
     ]);
-
-
-
     $sysconf['default_lang'] = $select_lang;
 } else if (isset($_COOKIE['select_lang'])) {
     $sysconf['default_lang'] = trim(strip_tags($_COOKIE['select_lang']));
 }
 
 ?>
-<div class="kdv" id="visitor-counter">
+<div class="kdv kdv-cinematic" id="visitor-counter">
+    <!-- Decorative layer -->
     <i class="fas fa-star kd-deco star1" aria-hidden="true"></i>
     <i class="fas fa-star kd-deco star2" aria-hidden="true"></i>
     <span class="kd-deco dot" aria-hidden="true"></span>
     <span class="kd-deco ring" aria-hidden="true"></span>
     <span class="kd-deco dots" aria-hidden="true"></span>
+    
+    <!-- ADDED: Aurora ambient glow -->
+    <div class="kdv-aurora" aria-hidden="true">
+        <span></span><span></span><span></span>
+    </div>
+
+    <!-- ADDED: Grid pattern subtle -->
+    <div class="kdv-grid-bg" aria-hidden="true"></div>
 
     <button type="button" class="kd-icon-btn kdv-theme" id="kdv-theme-toggle" aria-label="<?= __('Toggle theme') ?>">
         <i class="fas fa-moon"></i>
     </button>
 
     <div class="kdv-wrap">
-        <div class="kdv-card kdv-form-card">
+        <div class="kdv-card kdv-form-card kdv-glass">
             <a class="kd-brand kdv-brand" href="index.php">
                 <?php
-                // this file is included before login_template.inc.php / classic.php run,
-                // so $imagesDisk and assets() are not available yet
                 $kdvImagesDisk = \SLiMS\Filesystems\Storage::images();
                 if (isset($sysconf['logo_image']) && $sysconf['logo_image'] != '' && $kdvImagesDisk->isExists($path = 'default/' . $sysconf['logo_image'])) {
                     echo '<img src="' . SWB . 'lib/minigalnano/createthumb.php?filename=images/' . $path . '&width=350" alt="logo">';
@@ -87,7 +80,7 @@ if (isset($_GET['select_lang'])) {
                 </span>
             </a>
 
-            <span class="kd-chip"><i class="fas fa-door-open"></i> <?= __('Visitor Counter') ?></span>
+            <span class="kd-chip kdv-chip-glow"><i class="fas fa-door-open"></i> <?= __('Visitor Counter') ?></span>
             <h1 class="kdv-title"><?= __('Welcome to ') ?><span><?= htmlspecialchars($sysconf['library_name']); ?></span></h1>
             <p class="kdv-lead"><?= __('Please fill your member ID or name.') ?></p>
 
@@ -107,21 +100,21 @@ if (isset($_GET['select_lang'])) {
                 </div>
                 <small class="kdv-hint"><?= __('Enough fill your member ID if you are member of ') . htmlspecialchars($sysconf['library_name']); ?></small>
 
-                <button type="submit" class="kdv-submit"><i class="fas fa-check-circle"></i> <?= __('Check In') ?></button>
+                <button type="submit" class="kdv-submit kdv-submit-glow"><i class="fas fa-check-circle"></i> <?= __('Check In') ?></button>
             </form>
 
             <div class="kdv-powered"><?= __('Powered by ') ?> <code>SLiMS</code> &middot; Pustaka Ceria</div>
         </div>
 
-        <div class="kdv-card kdv-side-card">
-            <div v-show="textInfo !== ''" class="kdv-result">
-                <div class="kdv-avatar">
+        <div class="kdv-card kdv-side-card kdv-glass">
+            <div v-show="textInfo !== ''" class="kdv-result kdv-result-animate">
+                <div class="kdv-avatar kdv-avatar-glow">
                     <img :src="image" alt="image" @error="onImageError">
                 </div>
                 <h3 class="kdv-message" v-html="textInfo"></h3>
             </div>
             <blockquote class="kdv-quote" v-show="textInfo === ''">
-                <i class="fas fa-quote-left"></i>
+                <i class="fas fa-quote-left kdv-quote-icon"></i>
                 <p>{{quotes.content}}</p>
                 <footer>{{quotes.author}}</footer>
             </blockquote>
@@ -155,7 +148,6 @@ if (isset($_GET['select_lang'])) {
                 this.image = './images/persons/photo.png'
             },
             getQuotes: function() {
-                // Alternative Free Quotes API: https://api.quotable.io/random
                 axios.get('https://slims.web.id/kutipan/')
                     .then(res => {
                         res.data.content = he.decode(res.data.content)
@@ -221,7 +213,6 @@ if (isset($_GET['select_lang'])) {
             textToSpeech: function(message) {
                 var message = new SpeechSynthesisUtterance(message);
                 var voices = speechSynthesis.getVoices();
-                // console.log(message);
                 message['volume'] = 1;
                 message['rate'] = 1;
                 message['pitch'] = 1;
@@ -233,7 +224,7 @@ if (isset($_GET['select_lang'])) {
         }
     })
 
-    // light / dark toggle (shares the 'kd-theme' setting with the rest of the theme)
+    // light / dark toggle
     (function () {
         var btn = document.getElementById('kdv-theme-toggle');
         if (!btn) return;

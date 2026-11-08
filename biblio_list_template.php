@@ -55,7 +55,6 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
     $biblio_id  = $biblio_detail['biblio_id'];
     $detail_url = SWB.'index.php?p=show_detail&id='.$biblio_id.'&keywords='.urlencode($settings['keywords']??'');
     $cite_url   = SWB.'index.php?p=cite&id='.$biblio_id.'&keywords='.$settings['keywords'];
-    // $title_link = '<a href="'.$detail_url.'" class="titleField" itemprop="name" property="name" title="'.__('View record detail description for this title').'">'.$title.'</a>';
 
     // image thumbnail
     $images_loc = 'images/docs/'.$biblio_detail['image'];
@@ -103,7 +102,7 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
         }
         foreach ($_authors as $a) {
             $a = trim($a);
-            $_authors_string .= '<a href="index.php?author='.urlencode($a).'&search=Search" itemprop="name" property="name" class="btn btn-outline-secondary btn-rounded">'.$a.'</a>';
+            $_authors_string .= '<a href="index.php?author='.urlencode($a).'&search=Search" itemprop="name" property="name" class="kd-author-chip">'.$a.'</a>';
         }
     }
 
@@ -126,11 +125,22 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
             $kd_meta_html .= '<span class="kd-meta-i' . $kd_cls . ($kd_empty ? ' empty' : '') . '"><em>' . htmlspecialchars(strip_tags($kd_m[0])) . '</em><b>' . ($kd_empty ? '-' : htmlspecialchars($kd_val)) . '</b></span>';
         }
 
-        $output .= '<article id="card-' . $biblio_id . '" class="kd-item item">';
-        $output .= '<div class="kd-item-cover"><a href="' . $detail_url . '"><img loading="lazy" src="' . $thumb_url . '" alt="cover" class="' . ($availability > 0 ? '' : 'not-available') . '" title="' . ($availability > 0 ?: __('Items is not available')) . '"/></a></div>';
+        $kd_delay = min(((int)$n % 8) * 70, 560);
+        $output .= '<article id="card-' . $biblio_id . '" class="kd-item item kd-card-in" style="animation-delay:' . $kd_delay . 'ms">';
+        $output .= '<div class="kd-item-cover">';
+        $output .= '<a href="' . $detail_url . '" class="kd-cover-link">';
+        $output .= '<img loading="lazy" src="' . $thumb_url . '" alt="cover" class="kd-cover-img ' . ($availability > 0 ? '' : 'not-available') . '" title="' . ($availability > 0 ?: __('Items is not available')) . '"/>';
+        $output .= '<div class="kd-cover-overlay"></div>';
+        if ($availability < 1) {
+            $output .= '<span class="kd-cover-badge no"><i class="fas fa-times-circle"></i> ' . __('Unavailable') . '</span>';
+        } else {
+            $output .= '<span class="kd-cover-badge ok"><i class="fas fa-check-circle"></i> ' . $availability . '</span>';
+        }
+        $output .= '</a>';
+        $output .= '</div>';
         $output .= '<div class="kd-item-body">';
-        $output .= '<h3><a title="' . __('View record detail description for this title') . '" href="' . $detail_url . '">' . stripslashes(addEllipsis($title, 120)) . '</a></h3>';
-        $output .= '<div class="kd-authors">' . $_authors_string . ($kd_year !== '' ? ' <span class="kd-year">' . htmlspecialchars($kd_year) . '</span>' : '') . '</div>';
+        $output .= '<h3 class="kd-item-title"><a title="' . __('View record detail description for this title') . '" href="' . $detail_url . '">' . stripslashes(addEllipsis($title, 120)) . '</a></h3>';
+        $output .= '<div class="kd-authors">' . $_authors_string . ($kd_year !== '' ? ' <span class="kd-year"><i class="far fa-calendar"></i> ' . htmlspecialchars($kd_year) . '</span>' : '') . '</div>';
         if ($kd_meta_html !== '') {
             $output .= '<div class="kd-meta">' . $kd_meta_html . '</div>';
         }
@@ -138,26 +148,27 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
             $output .= '<p class="kd-notes">' . $kd_notes . '</p>';
         }
         $output .= '<div class="kd-tags">';
-        if ($kd_gmd !== '') $output .= '<span class="kd-tag">' . htmlspecialchars($kd_gmd) . '</span>';
+        if ($kd_gmd !== '') $output .= '<span class="kd-tag"><i class="fas fa-file-alt"></i> ' . htmlspecialchars($kd_gmd) . '</span>';
         foreach ($kd_colls as $kd_c) {
-            $output .= '<span class="kd-tag plain">' . htmlspecialchars($kd_c) . '</span>';
+            $output .= '<span class="kd-tag plain"><i class="fas fa-folder"></i> ' . htmlspecialchars($kd_c) . '</span>';
         }
         $output .= '</div>'; // -- kd-tags
         $output .= '</div>'; // -- kd-item-body
         $output .= '<div class="kd-item-side">';
         $output .= '<div class="kd-avail ' . ($availability > 0 ? 'ok' : 'no') . '"><span>' . __('Availability') . '</span><b>' . $availability . '</b></div>';
         $output .= '<div class="kd-item-actions">';
-        $output .= '<a class="add-to-chart-button" data-biblio="' . $biblio_id . '" title="' . __('Add to basket') . '"><i class="fas fa-plus"></i></a>';
-        $output .= '<a class="openPopUp citationLink" href="' . $cite_url . '" title="' . str_replace('{title}', substr($title, 0, 50), __('Citation for: {title}')) . '" target="_blank">' . __('Cite') . '</a>';
-        $output .= '<a href="' . $detail_url . '&MARC=true" title="Download detail data in MARC" target="_blank">MARC</a>';
+        $output .= '<a class="kd-action-btn add-to-chart-button" data-biblio="' . $biblio_id . '" title="' . __('Add to basket') . '"><i class="fas fa-plus"></i></a>';
+        $output .= '<a class="kd-action-btn openPopUp citationLink" href="' . $cite_url . '" title="' . str_replace('{title}', substr($title, 0, 50), __('Citation for: {title}')) . '" target="_blank"><i class="fas fa-quote-right"></i></a>';
+        $output .= '<a class="kd-action-btn" href="' . $detail_url . '&MARC=true" title="Download detail data in MARC" target="_blank"><i class="fas fa-file-code"></i></a>';
         $output .= '</div>';
         $output .= '</div>'; // -- kd-item-side
         $output .= '</article>';
 
     else:
 
-        $output .= '<div class="col-md-3 px-2 grid-item">';
-        $output .= '<div class="card p-0 mb-3 kd-tilt-card" data-tilt data-tilt-max="4" data-tilt-speed="300" data-tilt-glare data-tilt-max-glare="0.1" data-tilt-scale="1.01" data-tilt-perspective="1000">';
+        $kd_delay = min(((int)$n % 8) * 70, 560);
+        $output .= '<div class="col-md-3 px-2 grid-item kd-card-in" style="animation-delay:' . $kd_delay . 'ms">';
+        $output .= '<div class="card p-0 mb-3 kd-tilt-card kd-grid-card" data-tilt data-tilt-max="4" data-tilt-speed="300" data-tilt-glare data-tilt-max-glare="0.1" data-tilt-scale="1.01" data-tilt-perspective="1000">';
         $__ = '__';
         $title_cite = str_replace('{title}', substr($title, 0, 50) , __('Citation for: {title}'));
         $output .= <<<HTML
@@ -175,16 +186,24 @@ function biblio_list_format($dbs, $biblio_detail, $n, $settings = array(), &$ret
     </div>
 </div>
 HTML;
-        $output .= '<div class="p-5 flex justify-center items-center bg-grey-light">';
-        $output .= '<img loading="lazy" src="'.$thumb_url.'" class="img-fluid img-thumbnail shadow '.($availability > 0 ?: 'not-available').'" title="' . ($availability > 0 ?:  __('Items is not available')) . '"/>';
+        $output .= '<div class="kd-grid-cover">';
+        $output .= '<a href="' . $detail_url . '">';
+        $output .= '<img loading="lazy" src="'.$thumb_url.'" class="kd-grid-img ' . ($availability > 0 ? '' : 'not-available') . '" title="' . ($availability > 0 ?:  __('Items is not available')) . '"/>';
+        $output .= '<div class="kd-grid-overlay"></div>';
+        if ($availability < 1) {
+            $output .= '<span class="kd-grid-badge no"><i class="fas fa-times-circle"></i></span>';
+        } else {
+            $output .= '<span class="kd-grid-badge ok"><i class="fas fa-check-circle"></i> ' . $availability . '</span>';
+        }
+        $output .= '</a>';
         $output .= '</div>';
         $output .= '<div class="card-body p-2">';
-        $output .= '<a href="'.$detail_url.'" class="text-sm text-decoration-none grid-item--title m-0">'.$title.'</a>';
+        $output .= '<a href="'.$detail_url.'" class="kd-grid-title">' . stripslashes(addEllipsis($title, 80)) . '</a>';
         $output .= '</div>';
         $output .= '<ul class="list-group list-group-flush">';
         $output .= $grid_item_content;
         if ($availability < 1) {
-            $output .= '<li class="list-group-item text-danger"><span></span><span class="text-center">'.__('Item Not Available').'</span></li>';
+            $output .= '<li class="list-group-item kd-grid-unavail"><i class="fas fa-times-circle"></i> <span>'.__('Item Not Available').'</span></li>';
         }
         $output .= '</ul>';
         $output .= '</div>';
