@@ -90,7 +90,7 @@
             <span>&copy; <?= date('Y'); ?> <?= htmlspecialchars($sysconf['library_name']); ?></span>
             <span class="kd-f-powered">
                 <?= __('Powered by '); ?><a target="_blank" rel="noopener" href="https://slims.web.id">SLiMS</a>
-                &middot; <?= __('Template by'); ?> <strong>Tutorial SLiMS</strong>
+                &middot; <?= __('Template by'); ?> <strong>Tutorial SLiMS & Yolis Libman</strong>
             </span>
         </div>
     </div>

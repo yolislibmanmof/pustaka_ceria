@@ -624,10 +624,18 @@
     margin-bottom: 14px;
     transform: translateZ(20px);
 }
-.kd-cover-frame img {
-    width: 100%; height: 100%;
-    object-fit: cover;
+.kd-cover-frame img,
+.kd-cover-frame .img-thumbnail {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;       
+    object-fit: contain;              
     display: block;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 0;
+    background: transparent;
+    border-radius: 10px;
 }
 .kd-cover-shine {
     position: absolute; inset: 0;
@@ -635,6 +643,16 @@
     pointer-events: none;
     mix-blend-mode: screen;
 }
+
+/* Latar "rak buku" untuk letterbox agar sampul contain terlihat premium */
+.kd-item-cover,
+.kd-grid-cover,
+.kd-cover-frame {
+    background:
+        radial-gradient(120% 70% at 50% 0%, rgba(96, 165, 250, .18), transparent 60%),
+        linear-gradient(160deg, #243049, #0f172a 75%);
+}
+
 .kd-side-btn { margin-top: 8px; }
 
 .kd-related { margin-top: 20px; }
@@ -662,7 +680,9 @@
 .kd-related-cover {
     flex: 0 0 44px; height: 60px;
     border-radius: 8px;
-    background-size: cover; background-position: center;
+    background-size: contain;         
+    background-repeat: no-repeat;
+    background-position: center;
     background-color: #e2e8f0;
     display: inline-flex; align-items: center; justify-content: center;
 }
@@ -733,19 +753,21 @@
 .kd-cover-link {
     display: block;
     position: relative;
-    aspect-ratio: 2/3;
+    aspect-ratio: auto;      /* tinggi mengikuti rasio asli sampul */
     overflow: hidden;
 }
 .kd-cover-img {
-    width: 100%; height: 100%;
-    object-fit: cover;
+    width: 100%;
+    height: auto;               /* sampul UTUH tanpa letterbox sama sekali */
     display: block;
+    padding: 5px;
+    box-sizing: border-box;
     transition: transform .4s ease;
 }
 .kd-item:hover .kd-cover-img { transform: scale(1.05); }
 .kd-cover-overlay {
     position: absolute; inset: 0;
-    background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,.4) 100%);
+    background: linear-gradient(180deg, transparent 78%, rgba(0,0,0,.22) 100%);
     pointer-events: none;
 }
 .kd-cover-badge {
@@ -877,7 +899,9 @@
 }
 .kd-grid-img {
     width: 100%; height: 100%;
-    object-fit: cover;
+    object-fit: contain;              
+    padding: 10px;
+    box-sizing: border-box;
     transition: transform .4s ease;
 }
 .kd-grid-card:hover .kd-grid-img { transform: scale(1.08); }
@@ -890,7 +914,7 @@
 .kd-grid-card:hover .kd-grid-overlay { opacity: .7; }
 .kd-grid-badge {
     position: absolute;
-    top: 10px; right: 10px;
+    top: 10px; left: 10px;   /* FIX: ke kiri, menu titik-tiga tetap di kanan */
     padding: 5px 12px;
     border-radius: 999px;
     font-size: 11px;
@@ -899,6 +923,7 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 2px 8px rgba(0,0,0,.3);
+    z-index: 2;
 }
 .kd-grid-badge.ok { background: rgba(34,197,94,.95); color: #fff; }
 .kd-grid-badge.no { background: rgba(239,68,68,.95); color: #fff; }
@@ -930,6 +955,46 @@
     font-weight: 600;
 }
 .kd-grid-unavail i { font-size: 13px; }
+
+/* FIX: baris meta grid card mengikuti tema (sebelumnya putih bawaan Bootstrap) */
+.kd-grid-card .list-group-item {
+    background: var(--kd-surface-2);
+    border-color: var(--kd-border);
+    color: var(--kd-text);
+    font-size: 12px;
+    padding: 8px 12px;
+    gap: 10px;
+}
+.kd-grid-card .list-group-item label {
+    color: var(--kd-muted);
+    font-weight: 700;
+    flex: 0 0 auto;
+}
+.kd-grid-card .list-group-item span.text-right {
+    color: var(--kd-text);
+    font-weight: 600;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.kd-grid-card .list-group-item.kd-grid-unavail {
+    background: var(--kd-red-soft) !important;
+    color: var(--kd-red) !important;
+}
+
+/* Tombol menu titik-tiga di atas cover grid */
+.kd-grid-card .grid-item--menu .dropdown-toggle {
+    width: 26px; height: 26px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, .55);
+    color: #fff;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: background .2s ease;
+}
+.kd-grid-card .grid-item--menu .dropdown-toggle:hover { background: rgba(15, 23, 42, .85); }
 
 /* ==========================================
    15. RESULTS PAGE
